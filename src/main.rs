@@ -13,15 +13,15 @@ use axum::{
     Json, Router,
 };
 use s3::{types::ByteStream, Client};
-use serde::{de::value, Deserialize};
+use serde::Deserialize;
+use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::{Duration, SystemTime};
-use std::{any, net::SocketAddr};
 use tower_http::cors::{Any, CorsLayer};
 
 use std::collections::BTreeMap;
 use surrealdb::{
-    sql::{thing, Datetime, Object, Thing, Value},
+    sql::{Object, Value},
     Response,
 };
 use surrealdb::{Datastore, Session};
@@ -123,8 +123,6 @@ async fn list_objects(
     }
 }
 
-
-
 // #[axum_macros::debug_handler]
 async fn get_address_info(
     Path(address): Path<String>,
@@ -133,10 +131,8 @@ async fn get_address_info(
     let ds = &db.0;
     let ses = &db.1;
 
-    let sql = "SELECT * FROM nftMarketItem WHERE $data";
-
-    let data: BTreeMap<String, Value> = [("address".into(), address.into())].into();
-    let vars: BTreeMap<String, Value> = [("data".into(), data.into())].into();
+    let sql = "SELECT * FROM nftMarketItem WHERE address = $address";
+    let vars: BTreeMap<String, Value> = [("address".into(), address.into())].into();
 
     let res = ds
         .execute(sql, ses, Some(vars), false)
@@ -150,7 +146,6 @@ async fn get_address_info(
     }
 
     (StatusCode::OK, Json(res_obj))
-
 }
 
 fn into_iter_objects(ress: Vec<Response>) -> Result<impl Iterator<Item = Result<Object>>> {
