@@ -1,0 +1,19 @@
+[package]
+name = "storage_play"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.66"
+aws-config = "0.51.0"
+aws-sdk-s3 = "0.21.0"
+aws-smithy-http = "0.51.0"
+axum = { version = "0.5.17", features = ["multipart", "form", "query"] }
+axum-macros = "0.3.0"
+serde = { version = "1.0.147", features = ["serde_derive"] }
+surrealdb = "1.0.0-beta.8"
+tokio = { version = "1.22.0", features = ["full"] }
+tower-http = { version = "0.3.5", features = ["cors"] }
+
